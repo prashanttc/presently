@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  createdAt DateTime @default(now())
+  presentations Presentation[]
+}
+
+model Presentation {
+  id          String   @id @default(cuid())
+  title       String
+  createdAt   DateTime @default(now())
+  lastview    DateTime @default(now())
+  userId      String
+  fileUrl     String
+  user        User     @relation(fields: [userId], references: [id])
+  slides      Slide[]
+  feedback    Feedback[]
+}
+
+model Slide {
+  id          String   @id @default(cuid())
+  slideNumber Int      // To keep track of the slide number/order
+  title       String?   // Optional: Title of the slide
+  content     String   // Plain text content of the slide
+  createdAt   DateTime @default(now())
+  keycontent String?
+  notes       String?
+  aifeedback  String?
+  presentationId String
+  presentation Presentation @relation(fields: [presentationId], references: [id])
+}
+
+
+model Feedback {
+  id             String   @id @default(cuid())
+  presentationId String
+  content        String
+  createdAt      DateTime @default(now())
+  presentation   Presentation @relation(fields: [presentationId], references: [id])
+}
