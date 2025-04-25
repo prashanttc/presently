@@ -28,24 +28,31 @@ app.post('/convert', upload.single('ppt'), async (req, res) => {
       return res.status(500).json({ error: 'Conversion failed', details: stderr });
     }
 
+    // Log the stdout and stderr to understand the conversion result
+    console.log('stdout:', stdout);
+    console.error('stderr:', stderr);
+
+    // Ensure all the generated images are listed
     const images = fs
       .readdirSync(outputDir)
-      .filter(file => file.endsWith('.png'))
-      .map(file => ({
+      .filter((file) => file.endsWith('.png'))
+      .map((file) => ({
         filename: file,
         localPath: path.join(outputDir, file),
       }));
 
+    console.log("images found:", images.map((img) => img.filename));  // Debug log
+
     if (!images.length) {
       return res.status(500).json({ error: 'No images generated.' });
     }
-      console.log("images",images.map((ifw)=>ifw.filename))
+
     // Send base64 image previews (optional, or send image paths for storage)
     const response = images.map(({ filename, localPath }) => {
       const base64 = fs.readFileSync(localPath, { encoding: 'base64' });
       return {
         filename,
-        base64: `data:image/png;base64,${base64}`
+        base64: `data:image/png;base64,${base64}`,
       };
     });
 
