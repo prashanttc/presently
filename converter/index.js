@@ -20,8 +20,7 @@ app.post('/convert', upload.single('ppt'), async (req, res) => {
 
   fs.mkdirSync(outputDir, { recursive: true });
 
-  const convertCommand = `libreoffice --headless --convert-to png --outdir ${outputDir} ${inputPath}`;
-
+  const convertCommand = `libreoffice --headless --convert-to png:impress_png_Export:PageRange=1-999 --outdir ${outputDir} ${inputPath}`;
   exec(convertCommand, (err, stdout, stderr) => {
     if (err) {
       console.error('Conversion error:', stderr);
@@ -32,16 +31,15 @@ app.post('/convert', upload.single('ppt'), async (req, res) => {
     console.log('stdout:', stdout);
     console.error('stderr:', stderr);
 
-    // Ensure all the generated images are listed
-    const images = fs
-      .readdirSync(outputDir)
+    const allFiles = fs.readdirSync(outputDir);
+    console.log("All files in outputDir:", allFiles);
+    
+    const images = allFiles
       .filter((file) => file.endsWith('.png'))
       .map((file) => ({
         filename: file,
         localPath: path.join(outputDir, file),
       }));
-
-    console.log("images found:", images.map((img) => img.filename));  // Debug log
 
     if (!images.length) {
       return res.status(500).json({ error: 'No images generated.' });
