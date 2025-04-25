@@ -1,27 +1,23 @@
+"use server";
+
 import { createClient } from "@supabase/supabase-js";
-import * as fs from "fs";
 
 export async function convertPPTAndUpload(file: File) {
   if (!file) throw new Error("No file provided");
 
-  // Wrap the File in FormData
   const upload = new FormData();
   upload.append("ppt", file);
 
-  // Send to the converter API
   const res = await fetch("https://ppt-converter.onrender.com/convert", {
     method: "POST",
     body: upload,
   });
+
   if (!res.ok) throw new Error("Conversion failed");
 
   const data = await res.json();
-  console.log("json", data);
-
-  // Assuming the response has 'slides' field which contains paths
-  const slides = data.slides; // Now contains { filename, path }
-
-  // Supabase upload
+  const slides = data.slides as { filename: string; base64: string }[];
+console.log("data",slides.map((id)=>id.filename))
   const supabase = createClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!
@@ -30,14 +26,14 @@ export async function convertPPTAndUpload(file: File) {
   const uploadedUrls: string[] = [];
 
   for (let i = 0; i < slides.length; i++) {
-    const imgPath = slides[i].path;
-
-    const imgBlob = fs.readFileSync(imgPath);  // Reading the local file
-    const path = `slides/${Date.now()}-${i}.png`;
+    const { base64, filename } = slides[i];
+    const base64Data = base64.split(",")[1];
+    const buffer = Buffer.from(base64Data, "base64");
+    const path = `slides/${Date.now()}-${filename}`;
 
     const { error } = await supabase.storage
       .from("ppt-bucket")
-      .upload(path, imgBlob, { contentType: "image/png" });
+      .upload(path, buffer, { contentType: "image/png" });
 
     if (error) throw error;
 
