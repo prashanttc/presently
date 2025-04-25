@@ -22,7 +22,6 @@ model Presentation {
   createdAt   DateTime @default(now())
   lastview    DateTime @default(now())
   userId      String
-  fileUrl     String
   user        User     @relation(fields: [userId], references: [id])
   slides      Slide[]
   feedback    Feedback[]
@@ -36,6 +35,7 @@ model Slide {
   createdAt   DateTime @default(now())
   keycontent String?
   notes       String?
+  imageUrl    String
   aifeedback  String?
   presentationId String
   presentation Presentation @relation(fields: [presentationId], references: [id])

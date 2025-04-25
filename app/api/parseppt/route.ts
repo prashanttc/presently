@@ -4,13 +4,7 @@ import { parseStringPromise } from "xml2js";
 import prisma from "@/lib/prisma";
 import { getUserIdFromSession } from "@/lib/auth";
 import { generateKeyContent } from "@/actions/generateKeyContent";
-import { createClient } from "@supabase/supabase-js";
-
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.SUPABASE_PROJECT_URL!,
-  process.env.SUPABASE_ANON_KEY!
-); 
+import { convertPPTAndUpload } from "@/actions/convertppt";
 
 export const config = {
   api: { bodyParser: false },
@@ -29,25 +23,6 @@ export async function POST(req: NextRequest) {
 
     // Convert file to buffer
     const buffer = Buffer.from(await file.arrayBuffer());
-
-    // Upload PPTX file to Supabase Storage
-    const { data, error: uploadError } = await supabase.storage
-      .from("ppt-bucket") // Replace with your actual storage bucket name
-      .upload(`ppt-files/${file.name}`, buffer);
-
-    if (uploadError) {
-      console.error("Error uploading file to Supabase:", uploadError);
-      return NextResponse.json(
-        { error: "Failed to upload file to storage" },
-        { status: 500 }
-      );
-    }
-
-    // Get the public URL of the uploaded file
-    const { data:signedURL } =  supabase.storage
-      .from("ppt-bucket")
-      .getPublicUrl(data?.path || "");
-
 
     const zip = await JSZip.loadAsync(buffer);
     let presentationTitle = "Untitled Presentation";
@@ -100,8 +75,13 @@ export async function POST(req: NextRequest) {
 
     // Create presentation record in the database
     const presentation = await prisma.presentation.create({
-      data: { title: presentationTitle, userId, fileUrl: signedURL.publicUrl },
+      data: { title: presentationTitle, userId },
     });
+    const uploadfiles = await convertPPTAndUpload(file);
+
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].imageUrl = uploadfiles[i] || "";
+    }
 
     if (presentation) {
       const slideData = slides.map((slide) => ({
