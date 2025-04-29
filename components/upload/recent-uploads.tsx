@@ -1,9 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { FileIcon as FilePresentation, MoreHorizontal, Play, Trash } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react";
+import {
+  FileIcon as FilePresentation,
+  MoreHorizontal,
+  Play,
+  Trash,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,39 +22,25 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import Link from "next/link"
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import { useGetAllPpt } from "@/query/presentation";
+import { toast } from "sonner";
+import { formatDistanceToNow } from "date-fns";
 
 export function RecentUploads() {
-  // Mock data for recent uploads
-  const [uploads, setUploads] = useState([
-    {
-      id: "1",
-      title: "Q1 Sales Report.pptx",
-      date: "April 20, 2025",
-      slides: 12,
-      size: "2.4 MB",
-    },
-    {
-      id: "2",
-      title: "Product Launch Strategy.pptx",
-      date: "April 18, 2025",
-      slides: 18,
-      size: "3.8 MB",
-    },
-    {
-      id: "3",
-      title: "Team Onboarding.pptx",
-      date: "April 15, 2025",
-      slides: 8,
-      size: "1.5 MB",
-    },
-  ])
-
-  const handleDelete = (id: string) => {
-    setUploads(uploads.filter((upload) => upload.id !== id))
+  const { data: uploads, isLoading, isError, error } = useGetAllPpt();
+  if (isLoading) {
+    return <div>loading...</div>;
   }
-
+  if (isError || !uploads) {
+    toast.error(error?.message || "no uplaod found");
+    return;
+  }
+    const uploadedAt =(upload:any)=>{
+      return formatDistanceToNow(new Date(upload.createdAt), { addSuffix: true });
+    } 
+  
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold tracking-tight">Recent Uploads</h2>
@@ -53,9 +50,7 @@ export function RecentUploads() {
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
               <div className="space-y-1">
                 <CardTitle className="line-clamp-1">{upload.title}</CardTitle>
-                <CardDescription>
-                  {upload.slides} slides · {upload.size}
-                </CardDescription>
+                <CardDescription>{upload.slides.length} slides</CardDescription>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -73,7 +68,7 @@ export function RecentUploads() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => handleDelete(upload.id)} className="text-destructive">
+                  <DropdownMenuItem className="text-destructive">
                     <Trash className="mr-2 h-4 w-4" />
                     Delete
                   </DropdownMenuItem>
@@ -83,10 +78,12 @@ export function RecentUploads() {
             <CardContent>
               <div className="flex items-center gap-2 py-2">
                 <FilePresentation className="h-5 w-5 text-primary" />
-                <span className="text-sm text-muted-foreground">Uploaded on {upload.date}</span>
+                <span className="text-sm text-muted-foreground">
+                  Uploaded {uploadedAt(upload)}
+                </span>
               </div>
               <Button asChild className="mt-2 w-full gap-2">
-                <Link href="/practice">
+                <Link href={`/practice/${upload.id}`}>
                   <Play className="h-4 w-4" />
                   Practice Now
                 </Link>
@@ -96,5 +93,5 @@ export function RecentUploads() {
         ))}
       </div>
     </div>
-  )
+  );
 }

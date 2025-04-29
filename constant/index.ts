@@ -6,6 +6,7 @@
       content:
         "Welcome to our quarterly business review. Today we'll cover our performance, challenges, and goals for the next quarter.",
       notes: "Speak slowly and clearly. Make eye contact with the audience.",
+      imageUrl:""
     },
     {
       id: "2",
@@ -16,6 +17,8 @@
         "We've seen a 15% increase in revenue compared to last quarter, with customer satisfaction at an all-time high of 92%.",
       notes:
         "Emphasize the growth numbers. Pause after mentioning the 15% increase.",
+        imageUrl:""
+
     },
     {
       id: "3",
@@ -26,6 +29,8 @@
         "Supply chain disruptions have affected our delivery times. We're implementing new logistics solutions to address this.",
       notes:
         "Be honest about the challenges but focus on the solutions we're implementing.",
+        imageUrl:""
+
     },
     {
       id: "4",
@@ -35,6 +40,8 @@
       content:
         "Our main goals for Q2 include expanding to 2 new markets, launching our mobile app, and improving delivery times by 20%.",
       notes: "Show enthusiasm when talking about the mobile app launch.",
+      imageUrl:""
+
     },
     {
       id: "5",
@@ -43,5 +50,7 @@
       content: "Thank you for your attention. Any questions?",
       notes:
         "Prepare for potential questions about the mobile app timeline and new markets.",
+        imageUrl:""
+
     },
   ];

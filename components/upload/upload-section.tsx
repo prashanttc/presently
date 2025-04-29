@@ -10,10 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useUploadppt } from "@/query/presentation";
 
 export function UploadSection() {
+  const{mutate,isError,error,isPending,isSuccess  }=useUploadppt()
   const [dragActive, setDragActive] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
   const handleDrag = (e: React.DragEvent) => {
@@ -44,49 +45,22 @@ export function UploadSection() {
   };
 
   const handleFileUpload = async (file: File) => {
-    // Check if file is a PowerPoint file
     if (!file.name.endsWith(".pptx")) {
       toast.error(
         "Invalid file format Please upload a PowerPoint (.pptx) file"
       );
       return;
     }
-
-    // Check file size (max 50MB)
     if (file.size > 50 * 1024 * 1024) {
       toast.error("File too large. Maximum file size is 50MB");
       return;
     }
-    setUploading(true);
-
-    // Simulate upload
-    const formdata = new FormData();
-    formdata.append("file", file);
-    try {
-      const response = await fetch("/api/parseppt", {
-        method: "POST",
-        body: formdata,
-      });
-      if (!response.ok) {
-        toast.error("failed to upload presentation");
-        throw new Error("Failed to upload the presentation");
-      }
-      const data = await response.json();
-      if (data.success) {
-        toast.success(
-          `${file.name} has been uploaded and parsed successfully.`
-        );
-        router.push(`/practice?id=${data.presentationId}`);
-      } else {
-        toast.error("error parsing presentation");
-        return;
-      }
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setUploading(false);
-    }
+    mutate(file)
   };
+
+  if(isError){
+    toast.error(error.message)
+  }
 
   return (
     <Card
@@ -123,9 +97,9 @@ export function UploadSection() {
                 className="hidden"
                 onChange={handleChange}
               />
-              <Button asChild className="w-full gap-2" disabled={uploading}>
+              <Button asChild className="w-full gap-2 cursor-pointer" disabled={isPending}>
                 <label htmlFor="file-upload">
-                  {uploading ? (
+                  {isPending ? (
                     <>
                       <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                       Uploading...

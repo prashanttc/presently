@@ -6,11 +6,11 @@ export function DashboardHeader() {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">Manage and practice your presentations</p>
+        <h1 className="heading-xl">Welcome back, John</h1>
+        <p className="body-md text-muted-foreground mt-1">Ready to practice your presentations?</p>
       </div>
-      <Button asChild>
-        <Link href="/upload-practice" className="gap-1">
+      <Button asChild className="gap-1 flex btn-color rounded-full bg-accent hover:bg-accent/90">
+        <Link href="/upload">
           <Plus className="h-4 w-4" />
           New Presentation
         </Link>

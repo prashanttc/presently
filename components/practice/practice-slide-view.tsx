@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import Image from "next/image"
 
 interface Slide {
   id: string
@@ -11,6 +12,7 @@ interface Slide {
   content: string
   slideNumber:number
   notes: string|null
+  imageUrl:string
 }
 
 interface PracticeSlideViewProps {
@@ -19,7 +21,6 @@ interface PracticeSlideViewProps {
   onNextSlide: () => void
   onPrevSlide: () => void
 }
-
 export function PracticeSlideView({ slides, currentSlideIndex, onNextSlide, onPrevSlide }: PracticeSlideViewProps) {
   const currentSlide = slides[currentSlideIndex]
   const progress = ((currentSlideIndex + 1) / slides.length) * 100
@@ -28,7 +29,7 @@ export function PracticeSlideView({ slides, currentSlideIndex, onNextSlide, onPr
     <Card className="flex h-[600px] flex-col">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b">
         <CardTitle className="text-xl">
-          Slide {currentSlideIndex + 1} of {slides.length}: {currentSlide.title}
+          Slide {currentSlideIndex + 1} of {slides.length}
         </CardTitle>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" onClick={onPrevSlide} disabled={currentSlideIndex === 0}>
@@ -48,8 +49,11 @@ export function PracticeSlideView({ slides, currentSlideIndex, onNextSlide, onPr
       </CardHeader>
       <CardContent className="flex-1 overflow-auto p-6">
         <div className="flex h-full flex-col items-center justify-center rounded-lg border bg-card p-6 text-center">
-          <h3 className="mb-6 text-2xl font-bold">{currentSlide.title}</h3>
+          {currentSlide.imageUrl?
+          <Image src={currentSlide.imageUrl} height={1000} width={1000} alt={currentSlide.title||'title'}/>:
           <p className="text-lg">{currentSlide.content}</p>
+        }
+
         </div>
       </CardContent>
       <CardFooter className="border-t bg-muted/50 px-6 py-4">

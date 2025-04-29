@@ -3,73 +3,199 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+  :root,
+  .theme-purple {
+    /* Base colors */
+    --background: 260 25% 98%;
+    --foreground: 260 25% 15%;
 
-    /* Updated primary color to purple */
+    /* Card and UI elements */
+    --card: 0 0% 100%;
+    --card-foreground: 260 25% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 25% 15%;
+
+    /* Primary brand color - vibrant purple */
     --primary: 265 89% 60%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 265 89% 97%;
-    --accent-foreground: 265 89% 60%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 265 89% 60%;
-    --radius: 0.5rem;
+    /* Secondary and accent colors - more vibrant */
+    --secondary: 230 100% 65%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 330 100% 65%;
+    --accent-foreground: 0 0% 98%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Theme specific colors */
+    --theme-color-1: 265 89% 60%; /* Purple */
+    --theme-color-2: 230 100% 65%; /* Blue */
+    --theme-color-3: 330 100% 65%; /* Pink */
+    --theme-color-4: 180 100% 40%; /* Teal */
+    --theme-color-5: 30 100% 60%; /* Orange */
+
+    /* Utility colors */
+    --muted: 260 25% 95%;
+    --muted-foreground: 260 25% 45%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Border and input styles - rounder */
+    --border: 260 25% 90%;
+    --input: 260 25% 90%;
+    --ring: 265 89% 60%;
+    --radius: 1rem;
+
+    /* Sidebar specific colors */
+    --sidebar-background: 265 89% 98%;
+    --sidebar-foreground: 260 25% 25%;
     --sidebar-primary: 265 89% 60%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
+    --sidebar-accent: 265 89% 95%;
+    --sidebar-accent-foreground: 260 25% 25%;
+    --sidebar-border: 265 89% 90%;
     --sidebar-ring: 265 89% 60%;
+
+    /* Success, warning, info colors - more vibrant */
+    --success: 142 72% 50%;
+    --warning: 38 92% 50%;
+    --info: 200 98% 50%;
+  }
+
+  .theme-blue {
+    --primary: 230 100% 65%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 210 100% 50%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 199 100% 65%;
+    --accent-foreground: 0 0% 98%;
+    --ring: 230 100% 65%;
+
+    /* Theme specific colors */
+    --theme-color-1: 230 100% 65%; /* Blue */
+    --theme-color-2: 210 100% 50%; /* Darker Blue */
+    --theme-color-3: 199 100% 65%; /* Light Blue */
+    --theme-color-4: 180 100% 40%; /* Teal */
+    --theme-color-5: 265 89% 60%; /* Purple */
+
+    /* Sidebar specific colors */
+    --sidebar-background: 230 100% 98%;
+    --sidebar-foreground: 230 50% 25%;
+    --sidebar-primary: 230 100% 65%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 230 100% 95%;
+    --sidebar-accent-foreground: 230 50% 25%;
+    --sidebar-border: 230 100% 90%;
+    --sidebar-ring: 230 100% 65%;
+  }
+
+  .theme-green {
+    --primary: 142 72% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 160 84% 39%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 120 100% 35%;
+    --accent-foreground: 0 0% 98%;
+    --ring: 142 72% 50%;
+
+    /* Theme specific colors */
+    --theme-color-1: 142 72% 50%; /* Green */
+    --theme-color-2: 160 84% 39%; /* Teal Green */
+    --theme-color-3: 120 100% 35%; /* Bright Green */
+    --theme-color-4: 180 100% 40%; /* Teal */
+    --theme-color-5: 78 100% 42%; /* Lime */
+
+    /* Sidebar specific colors */
+    --sidebar-background: 142 72% 98%;
+    --sidebar-foreground: 142 50% 25%;
+    --sidebar-primary: 142 72% 50%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 142 72% 95%;
+    --sidebar-accent-foreground: 142 50% 25%;
+    --sidebar-border: 142 72% 90%;
+    --sidebar-ring: 142 72% 50%;
+  }
+
+  .theme-pink {
+    --primary: 330 100% 65%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 340 100% 50%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 310 100% 65%;
+    --accent-foreground: 0 0% 98%;
+    --ring: 330 100% 65%;
+
+    /* Theme specific colors */
+    --theme-color-1: 330 100% 65%; /* Pink */
+    --theme-color-2: 340 100% 50%; /* Hot Pink */
+    --theme-color-3: 310 100% 65%; /* Magenta */
+    --theme-color-4: 280 100% 65%; /* Purple Pink */
+    --theme-color-5: 350 100% 65%; /* Light Red */
+
+    /* Sidebar specific colors */
+    --sidebar-background: 330 100% 98%;
+    --sidebar-foreground: 330 50% 25%;
+    --sidebar-primary: 330 100% 65%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 330 100% 95%;
+    --sidebar-accent-foreground: 330 50% 25%;
+    --sidebar-border: 330 100% 90%;
+    --sidebar-ring: 330 100% 65%;
+  }
+
+  .theme-orange {
+    --primary: 30 100% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 25 100% 50%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 40 100% 50%;
+    --accent-foreground: 0 0% 98%;
+    --ring: 30 100% 60%;
+
+    /* Theme specific colors */
+    --theme-color-1: 30 100% 60%; /* Orange */
+    --theme-color-2: 25 100% 50%; /* Dark Orange */
+    --theme-color-3: 40 100% 50%; /* Amber */
+    --theme-color-4: 15 100% 55%; /* Orange Red */
+    --theme-color-5: 45 100% 50%; /* Yellow Orange */
+
+    /* Sidebar specific colors */
+    --sidebar-background: 30 100% 98%;
+    --sidebar-foreground: 30 50% 25%;
+    --sidebar-primary: 30 100% 60%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 30 100% 95%;
+    --sidebar-accent-foreground: 30 50% 25%;
+    --sidebar-border: 30 100% 90%;
+    --sidebar-ring: 30 100% 60%;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    /* Base colors - dark mode */
+    --background: 260 25% 8%;
+    --foreground: 260 25% 95%;
 
-    /* Updated primary color to purple */
-    --primary: 265 89% 60%;
-    --primary-foreground: 0 0% 98%;
+    /* Card and UI elements - dark mode */
+    --card: 260 25% 12%;
+    --card-foreground: 260 25% 95%;
+    --popover: 260 25% 12%;
+    --popover-foreground: 260 25% 95%;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 265 89% 20%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    /* Utility colors - dark mode */
+    --muted: 260 25% 15%;
+    --muted-foreground: 260 25% 65%;
+    --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 265 89% 60%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 265 89% 60%;
+    /* Border and input styles - dark mode */
+    --border: 260 25% 20%;
+    --input: 260 25% 20%;
+
+    /* Sidebar specific colors - dark mode */
+    --sidebar-background: 260 25% 12%;
+    --sidebar-foreground: 260 25% 95%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 265 89% 60%;
+    --sidebar-accent: 260 25% 15%;
+    --sidebar-accent-foreground: 260 25% 95%;
+    --sidebar-border: 260 25% 20%;
   }
 }
 
@@ -79,7 +205,233 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  /* Improved typography */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply tracking-tight;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Glass morphism styles with more rounded corners */
+.glass {
+  @apply bg-white/70 dark:bg-black/30 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl;
+}
+
+.glass-card {
+  @apply bg-white/80 dark:bg-black/30 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-sm rounded-2xl;
+}
+
+.glass-header {
+  background-color: hsla(var(--theme-color-1), 0.05);
+  @apply backdrop-blur-md border-b border-white/20 dark:border-white/10;
+}
+
+.glass-sidebar {
+  background-color: hsla(var(--theme-color-1), 0.08);
+  @apply backdrop-blur-md border-r border-white/20 dark:border-white/10;
+}
+
+/* Gradient backgrounds - more vibrant */
+.bg-gradient-subtle {
+  background: linear-gradient(
+    135deg,
+    hsla(var(--theme-color-1), 0.05),
+    hsla(var(--theme-color-2), 0.05),
+    hsla(var(--theme-color-3), 0.05)
+  );
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, hsla(var(--theme-color-1), 0.8), hsla(var(--theme-color-1), 0.5));
+}
+
+/* Update the bg-gradient-vibrant class to use theme colors */
+.bg-gradient-vibrant {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--theme-color-1) / 0.9),
+    hsl(var(--theme-color-2) / 0.7),
+    hsl(var(--theme-color-3) / 0.6)
+  );
+}
+
+/* Add a new class for themed backgrounds */
+.themed-background {
+  background-color: hsla(var(--theme-color-1), 0.05);
+}
+
+/* Colorful card backgrounds */
+.card-color-1 {
+  background: linear-gradient(to bottom right, hsla(var(--theme-color-1), 0.1), hsla(var(--theme-color-1), 0.05));
+  border-color: hsla(var(--theme-color-1), 0.2);
+}
+
+.card-color-2 {
+  background: linear-gradient(to bottom right, hsla(var(--theme-color-2), 0.1), hsla(var(--theme-color-2), 0.05));
+  border-color: hsla(var(--theme-color-2), 0.2);
+}
+
+.card-color-3 {
+  background: linear-gradient(to bottom right, hsla(var(--theme-color-3), 0.1), hsla(var(--theme-color-3), 0.05));
+  border-color: hsla(var(--theme-color-3), 0.2);
+}
+
+.card-color-4 {
+  background: linear-gradient(to bottom right, hsla(var(--theme-color-4), 0.1), hsla(var(--theme-color-4), 0.05));
+  border-color: hsla(var(--theme-color-4), 0.2);
+}
+
+.card-color-5 {
+  background: linear-gradient(to bottom right, hsla(var(--theme-color-5), 0.1), hsla(var(--theme-color-5), 0.05));
+  border-color: hsla(var(--theme-color-5), 0.2);
+}
+
+/* Typography system */
+.display {
+  @apply text-4xl font-bold tracking-tight;
+  letter-spacing: -0.03em;
+}
+
+.heading-xl {
+  @apply text-3xl font-bold tracking-tight;
+  letter-spacing: -0.02em;
+}
+
+.heading-lg {
+  @apply text-2xl font-bold tracking-tight;
+  letter-spacing: -0.01em;
+}
+
+.heading-md {
+  @apply text-xl font-semibold;
+  letter-spacing: -0.01em;
+}
+
+.heading-sm {
+  @apply text-lg font-semibold;
+  letter-spacing: -0.005em;
+}
+
+.body-lg {
+  @apply text-base leading-relaxed;
+}
+
+.body-md {
+  @apply text-sm leading-relaxed;
+}
+
+.body-sm {
+  @apply text-xs leading-relaxed;
+}
+
+.caption {
+  @apply text-xs text-muted-foreground;
+}
+
+/* Icon backgrounds */
+.icon-bg {
+  @apply rounded-full p-3 flex items-center justify-center;
+}
+
+.icon-bg-1 {
+  background-color: hsla(var(--theme-color-1), 0.1);
+  color: hsl(var(--theme-color-1));
+}
+
+.icon-bg-2 {
+  background-color: hsla(var(--theme-color-2), 0.1);
+  color: hsl(var(--theme-color-2));
+}
+
+.icon-bg-3 {
+  background-color: hsla(var(--theme-color-3), 0.1);
+  color: hsl(var(--theme-color-3));
+}
+
+.icon-bg-4 {
+  background-color: hsla(var(--theme-color-4), 0.1);
+  color: hsl(var(--theme-color-4));
+}
+
+.icon-bg-5 {
+  background-color: hsla(var(--theme-color-5), 0.1);
+  color: hsl(var(--theme-color-5));
+}
+
+/* Button colors */
+@layer components {
+  .btn-color {
+    @apply bg-primary text-white hover:bg-primary/90;
+  }
+
+  .btn-color-1 {
+    background-color: hsl(var(--theme-color-1));
+    color: white;
+  }
+  .btn-color-1:hover {
+    background-color: hsla(var(--theme-color-1), 0.9);
+  }
+
+  .btn-color-2 {
+    background-color: hsl(var(--theme-color-2));
+    color: white;
+  }
+  .btn-color-2:hover {
+    background-color: hsla(var(--theme-color-2), 0.9);
+  }
+
+  .btn-color-3 {
+    background-color: hsl(var(--theme-color-3));
+    color: white;
+  }
+  .btn-color-3:hover {
+    background-color: hsla(var(--theme-color-3), 0.9);
+  }
+
+  .btn-color-4 {
+    background-color: hsl(var(--theme-color-4));
+    color: white;
+  }
+  .btn-color-4:hover {
+    background-color: hsla(var(--theme-color-4), 0.9);
+  }
+
+  .btn-color-5 {
+    background-color: hsl(var(--theme-color-5));
+    color: white;
+  }
+  .btn-color-5:hover {
+    background-color: hsla(var(--theme-color-5), 0.9);
+  }
+}
+
+/* Progress bar colors */
+.progress-color-1 {
+  background-color: hsl(var(--theme-color-1));
+}
+
+.progress-color-2 {
+  background-color: hsl(var(--theme-color-2));
+}
+
+.progress-color-3 {
+  background-color: hsl(var(--theme-color-3));
+}
+
+.progress-color-4 {
+  background-color: hsl(var(--theme-color-4));
+}
+
+.progress-color-5 {
+  background-color: hsl(var(--theme-color-5));
 }
 
 /* Audio visualization styles */
@@ -96,4 +448,92 @@
   background-color: hsl(var(--primary));
   border-radius: 2px;
   transition: height 0.1s ease;
+}
+
+/* Loading animation */
+.loading-dots {
+  @apply flex items-center justify-center space-x-1;
+}
+
+.loading-dots div {
+  @apply h-2 w-2 rounded-full bg-primary;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dots div:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dots div:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* Skeleton loading */
+.skeleton {
+  @apply bg-muted/50 animate-pulse rounded-xl;
+}
+
+/* Theme selector styles */
+.theme-selector {
+  @apply flex flex-wrap gap-2;
+}
+
+.theme-option {
+  @apply relative w-10 h-10 rounded-full cursor-pointer border-2 border-transparent transition-all;
+}
+
+.theme-option.active {
+  @apply border-white ring-2 ring-primary;
+}
+
+.theme-option-purple {
+  background: linear-gradient(135deg, hsl(265 89% 60%), hsl(230 100% 65%), hsl(330 100% 65%));
+}
+
+.theme-option-blue {
+  background: linear-gradient(135deg, hsl(230 100% 65%), hsl(210 100% 50%), hsl(199 100% 65%));
+}
+
+.theme-option-green {
+  background: linear-gradient(135deg, hsl(142 72% 50%), hsl(160 84% 39%), hsl(120 100% 35%));
+}
+
+.theme-option-pink {
+  background: linear-gradient(135deg, hsl(330 100% 65%), hsl(340 100% 50%), hsl(310 100% 65%));
+}
+
+.theme-option-orange {
+  background: linear-gradient(135deg, hsl(30 100% 60%), hsl(25 100% 50%), hsl(40 100% 50%));
+}
+
+/* Sidebar specific styles */
+.sidebar-themed {
+  background-color: hsla(var(--theme-color-1), 0.08);
+  border-color: hsla(var(--theme-color-1), 0.2);
+}
+
+.sidebar-item-active {
+  background-color: hsla(var(--theme-color-1), 0.15);
+  color: hsl(var(--theme-color-1));
+}
+
+.sidebar-icon {
+  color: hsl(var(--theme-color-1));
+}
+
+/* Dialog theming */
+.dialog-themed {
+  border-color: hsla(var(--theme-color-1), 0.2);
+  background-color: hsla(var(--theme-color-1), 0.02);
 }
