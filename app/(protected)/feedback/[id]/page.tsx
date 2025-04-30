@@ -13,6 +13,7 @@ import { FeedbackMetrics } from "@/components/feedback/feedback-metrics"
 import { useGetFeedbackById } from "@/query/presentation"
 import { QuestionsFeedback } from "@/components/feedback/questions-feedback"
 import { Loading } from "@/components/loading"
+import { SlideSummary } from "@/components/feedback/slide-summary"
 
 export default function PresentationFeedbackPage() {
   const params = useParams()
@@ -102,6 +103,8 @@ export default function PresentationFeedbackPage() {
           </TabsContent> */}
         </Tabs>
       </Card>
+      <SlideSummary summary={feedbackData.slideTips} />
+
     </div>
   )
 }
