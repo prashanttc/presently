@@ -44,7 +44,7 @@ export default function RootLayout({
                     <ProtectedLayout>
                       <main className="flex-1 p-4 md:p-6 ">{children}</main>
                     </ProtectedLayout>
-                    <Toaster />
+                    <Toaster  richColors={true} />
                   </SidebarInset>
                 </div>
               </SidebarProvider>
