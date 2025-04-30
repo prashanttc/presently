@@ -27,11 +27,12 @@ import Link from "next/link";
 import { useGetAllPpt } from "@/query/presentation";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import { Loading } from "../loading";
 
 export function RecentUploads() {
   const { data: uploads, isLoading, isError, error } = useGetAllPpt();
   if (isLoading) {
-    return <div>loading...</div>;
+    return <Loading/>
   }
   if (isError || !uploads) {
     toast.error(error?.message || "no uplaod found");
@@ -46,7 +47,7 @@ export function RecentUploads() {
       <h2 className="text-2xl font-bold tracking-tight">Recent Uploads</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {uploads.map((upload) => (
-          <Card key={upload.id}>
+          <Card key={upload.id} className="glass-card">
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
               <div className="space-y-1">
                 <CardTitle className="line-clamp-1">{upload.title}</CardTitle>

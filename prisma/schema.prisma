@@ -36,16 +36,36 @@ model Slide {
   keycontent String?
   notes       String?
   imageUrl    String
-  aifeedback  String?
   presentationId String
   presentation Presentation @relation(fields: [presentationId], references: [id])
 }
-
-
 model Feedback {
-  id             String   @id @default(cuid())
-  presentationId String
-  content        String
-  createdAt      DateTime @default(now())
-  presentation   Presentation @relation(fields: [presentationId], references: [id])
+  id                String           @id @default(uuid())
+  overallScore      Int              // Overall performance score
+  strengths         String[]         // List of strengths
+  areasForImprovement String[]      // List of areas for improvement
+  pacingScore       Int              // Score for pacing
+  pacingNotes       String           // Notes about pacing
+  fillerWordScore   Int              // Score for filler word usage
+  fillerWordCount   Int              // Count of filler words
+  fillerWordNotes   String           // Notes about filler words
+  clarityScore      Int              // Score for clarity
+  clarityNotes      String           // Notes about clarity
+  contentMatch      Int              // Percentage of content match
+  aiFeedback        String             // AI-generated feedback
+  audienceQuestions String[]
+  slideTips         SlideTip[]       // Relation to SlideTip model
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+    presentationId String
+  presentation Presentation @relation(fields: [presentationId], references: [id])
 }
+
+model SlideTip {
+  id           String   @id @default(uuid())
+  slide        String   // Content of the slide
+  feedbacks     String   // Feedback for the slide
+  feedbackId   String   // Foreign key to Feedback model
+  feedback     Feedback @relation(fields: [feedbackId], references: [id])
+}
+

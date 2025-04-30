@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 
 export function AppearanceSettings() {
   return (
-    <Card>
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle>Appearance</CardTitle>
         <CardDescription>Customize the look and feel of the application</CardDescription>

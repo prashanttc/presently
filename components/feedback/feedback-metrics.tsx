@@ -1,86 +1,73 @@
-import { AlertCircle, Clock, MessageSquare, VolumeX } from "lucide-react"
+import { Clock, MessageSquare, VolumeX } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 
 interface MetricsProps {
   metrics: {
-    pacing: {
-      score: number
-      feedback: string
-    }
-    fillerWords: {
-      score: number
-      count: number
-      feedback: string
-    }
-    confidence: {
-      score: number
-      feedback: string
-    }
-    clarity: {
-      score: number
-      feedback: string
-    }
-  }
+    pacingScore:number 
+    pacingNotes: string
+    fillerWordScore:number
+    fillerWordCount:number
+      fillerWordNotes: string
+      clarityScore: number
+       clarityNotes: string
+}
 }
 
 export function FeedbackMetrics({ metrics }: MetricsProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 90) return "text-green-500"
-    if (score >= 70) return "text-amber-500"
-    return "text-red-500"
+    if (score >= 90) return "text-success"
+    if (score >= 70) return "text-warning"
+    return "text-destructive"
   }
 
   const getProgressColor = (score: number) => {
-    if (score >= 90) return "bg-green-500"
-    if (score >= 70) return "bg-amber-500"
-    return "bg-red-500"
+    if (score >= 90) return "bg-success"
+    if (score >= 70) return "bg-warning"
+    return "bg-destructive"
   }
-
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
+      <Card className="glass-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Pacing</CardTitle>
           <Clock className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className={`text-2xl font-bold ${getScoreColor(metrics.pacing.score)}`}>
-              {metrics.pacing.score}/100
+            <span className={`text-2xl font-bold ${getScoreColor(metrics.pacingScore)}`}>
+              {metrics.pacingScore}/100
             </span>
           </div>
           <Progress
-            value={metrics.pacing.score}
-            className="h-2"
-            indicatorClassName={getProgressColor(metrics.pacing.score)}
+            value={metrics.pacingScore}
+            className={getProgressColor(metrics.pacingScore)}
           />
-          <CardDescription className="text-xs">{metrics.pacing.feedback}</CardDescription>
+          <CardDescription className="text-xs">{metrics.pacingNotes}</CardDescription>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="glass-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Filler Words</CardTitle>
           <VolumeX className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className={`text-2xl font-bold ${getScoreColor(metrics.fillerWords.score)}`}>
-              {metrics.fillerWords.score}/100
+            <span className={`text-2xl font-bold ${getScoreColor(metrics.fillerWordScore)}`}>
+              {metrics.fillerWordScore}/100
             </span>
-            <span className="text-sm text-muted-foreground">{metrics.fillerWords.count} detected</span>
+            <span className="text-sm text-muted-foreground">{metrics.fillerWordCount} detected</span>
           </div>
           <Progress
-            value={metrics.fillerWords.score}
-            className="h-2"
-            indicatorClassName={getProgressColor(metrics.fillerWords.score)}
+            value={metrics.fillerWordScore}
+            className={getProgressColor(metrics.fillerWordScore)}
           />
-          <CardDescription className="text-xs">{metrics.fillerWords.feedback}</CardDescription>
+          <CardDescription className="text-xs">{metrics.fillerWordNotes}</CardDescription>
         </CardContent>
       </Card>
 
-      <Card>
+      {/* <Card className="glass-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Confidence</CardTitle>
           <AlertCircle className="h-4 w-4 text-muted-foreground" />
@@ -98,25 +85,24 @@ export function FeedbackMetrics({ metrics }: MetricsProps) {
           />
           <CardDescription className="text-xs">{metrics.confidence.feedback}</CardDescription>
         </CardContent>
-      </Card>
+      </Card> */}
 
-      <Card>
+      <Card className="glass-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Clarity</CardTitle>
           <MessageSquare className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className={`text-2xl font-bold ${getScoreColor(metrics.clarity.score)}`}>
-              {metrics.clarity.score}/100
+            <span className={`text-2xl font-bold ${getScoreColor(metrics.clarityScore)}`}>
+              {metrics.clarityScore}/100
             </span>
           </div>
           <Progress
-            value={metrics.clarity.score}
-            className="h-2"
-            indicatorClassName={getProgressColor(metrics.clarity.score)}
+            value={metrics.clarityScore}
+            className={getProgressColor(metrics.clarityScore)}
           />
-          <CardDescription className="text-xs">{metrics.clarity.feedback}</CardDescription>
+          <CardDescription className="text-xs">{metrics.clarityNotes}</CardDescription>
         </CardContent>
       </Card>
     </div>

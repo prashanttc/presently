@@ -170,7 +170,7 @@
 
   .dark {
     /* Base colors - dark mode */
-    --background: 260 25% 8%;
+    --background: 260 215% 8%;
     --foreground: 260 25% 95%;
 
     /* Card and UI elements - dark mode */
@@ -190,7 +190,7 @@
     --input: 260 25% 20%;
 
     /* Sidebar specific colors - dark mode */
-    --sidebar-background: 260 25% 12%;
+    --sidebar-background: 260 35% 12%;
     --sidebar-foreground: 260 25% 95%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 260 25% 15%;

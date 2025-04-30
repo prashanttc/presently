@@ -10,3 +10,15 @@ interface slides {
   aifeedback: string;
   presentationId: string;
 }
+
+interface Presentation {
+  id: string
+  title: string
+  createdAt:Date
+  lastview:Date
+  slides:Slide[]
+}
+interface Slide{
+  slideNumber:number
+  imageUrl:string
+}

@@ -15,6 +15,7 @@ import { slides } from "@/constant";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Loader2Icon } from "lucide-react";
+import { Loading } from "@/components/loading";
 
 export default function PracticePage() {
   const params = useParams();
@@ -25,14 +26,13 @@ export default function PracticePage() {
     mutate,
     isError: errorgenerating,
     error: errorgen,
-    isSuccess,
-    data:genreated,
     isPending,
   } = useGenerateFeedback();
   const result = !id || !data ? slides : data;
   const [isPracticing, setIsPracticing] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
@@ -41,58 +41,43 @@ export default function PracticePage() {
 
   const feedback = (feedbackInput: FormData) => {
     mutate({ feedbackInput, id });
- };
- 
- const transcribeAudio = async () => {
-     if (!audioUrl) {
-       toast.error("No recording found");
-       return;
-     }
-     const audioBlob = await fetch(audioUrl).then((r) => r.blob());
-     const formData = new FormData();
-     formData.append("file", audioBlob, "recording.webm");
- 
-     const response = await fetch("/api/transcribe", {
-       method: "POST",
-       body: formData,
-     });
- 
-     const result = await response.json();
-     const transcript = result.text;
-     toast.success("Recorded successfully!");
- 
-     const feedbackInput = new FormData();
-     feedbackInput.append("transcription", transcript);
-     feedbackInput.append("duration", elapsedTime.toString());
-     feedback(feedbackInput);
-     console.log("Transcript:", transcript);
- };
- 
- // Inside your main return
- 
- if (isLoading) {
-   return <div>Loading...</div>;
- }
- 
- if (isError||errorgenerating) {
-   toast.error(error?.message||errorgen?.message);
- }
- 
- // Handle feedback generation states
- 
- if (isPending) {
-   return (
-     <div className="w-full h-full flex items-center justify-center">
-       <Loader2Icon className="h-10 w-10 animate-spin" />
-     </div>
-   );
- }
- 
- if (isSuccess) {
-   console.log("feedback generated:", genreated);
-   router.push("/feedback"); // move to feedback page once ready
- }
- 
+  };
+
+  const transcribeAudio = async () => {
+    setLoading(true);
+    if (!audioUrl) {
+      toast.error("No recording found");
+      return;
+    }
+    const audioBlob = await fetch(audioUrl).then((r) => r.blob());
+    const formData = new FormData();
+    formData.append("file", audioBlob, "recording.webm");
+
+    const response = await fetch("/api/transcribe", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+    const transcript = result.text;
+    toast.success("Recorded successfully!");
+    const feedbackInput = new FormData();
+    feedbackInput.append("transcription", transcript);
+    feedbackInput.append("duration", elapsedTime.toString());
+    feedback(feedbackInput);
+    setLoading(false);
+  };
+
+  if (isError || errorgenerating) {
+    toast.error(error?.message || errorgen?.message);
+  }
+
+  if (isPending || isLoading || loading) {
+    return (
+     <Loading/>
+    );
+  }
+  router.push(`/feedback/${id}`);
 
   const startPractice = async () => {
     setIsPracticing(true);

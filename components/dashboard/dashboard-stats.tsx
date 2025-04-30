@@ -1,7 +1,14 @@
-import { Activity, Clock, FileIcon as FilePresentation, Mic } from "lucide-react"
+"use client";
+import { Activity, Clock, FileIcon as FilePresentation, LoaderCircle, Mic } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { useGetAllPpt } from "@/query/presentation";
+import { Loading } from "../loading";
 
 export function DashboardStats() {
+  const{data,isPending}=useGetAllPpt()
+  if(isPending){
+    return <Loading/>
+  }
   return (
     <div className="grid gap-4 md:grid-cols-4">
       <Card className="glass-card card-color-1 overflow-hidden">
@@ -11,7 +18,7 @@ export function DashboardStats() {
               <FilePresentation className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-3xl font-bold">12</p>
+              <p className="text-3xl font-bold">{data?.length}</p>
               <p className="text-sm text-muted-foreground">Presentations</p>
             </div>
           </div>

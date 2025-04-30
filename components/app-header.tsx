@@ -13,10 +13,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ThemeSelector } from "./theme-selector"
 
 export function AppHeader() {
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 glass-header px-4 md:px-6">
       <SidebarTrigger className="md:hidden" />
       <div className="hidden w-full max-w-sm md:flex">
         <div className="relative w-full">
@@ -24,11 +25,12 @@ export function AppHeader() {
           <Input
             type="search"
             placeholder="Search presentations..."
-            className="w-full rounded-lg bg-background pl-8 md:w-[300px] lg:w-[400px]"
+            className="w-full rounded-lg bg-background/50 pl-8 md:w-[300px] lg:w-[400px]"
           />
         </div>
       </div>
       <div className="ml-auto flex items-center gap-2">
+        <ThemeSelector />
         <Button variant="ghost" size="icon" className="rounded-full">
           <Bell className="h-5 w-5" />
           <span className="sr-only">Notifications</span>
@@ -42,15 +44,15 @@ export function AppHeader() {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="dialog-themed">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
+              <User className="mr-2 h-4 w-4 sidebar-icon" />
               Profile
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
+              <Settings className="mr-2 h-4 w-4 sidebar-icon" />
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />

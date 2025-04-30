@@ -37,9 +37,9 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <SidebarProvider>
-                <div className="flex min-h-screen w-screen bg-background">
+                <div className="flex min-h-screen w-screen bg-gradient-vibrant">
                   <AppSidebar />
-                  <SidebarInset className="flex flex-col flex-1">
+                  <SidebarInset className="flex flex-col flex-1 themed-background">
                     <AppHeader />
                     <ProtectedLayout>
                       <main className="flex-1 p-4 md:p-6 ">{children}</main>

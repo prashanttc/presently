@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export function ProfileSettings() {
   return (
-    <Card className="">
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle>Profile</CardTitle>
         <CardDescription>Update your personal information</CardDescription>
@@ -31,12 +31,12 @@ export function ProfileSettings() {
         <div className="space-y-4">
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>
-            <Input id="name" defaultValue="John Doe" />
+            <Input id="name" defaultValue="John Doe" className="glass-card" />
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" defaultValue="john.doe@example.com" />
+            <Input id="email" type="email" defaultValue="john.doe@example.com" className="glass-card"/>
           </div>
 
           <div className="grid gap-2">
@@ -44,7 +44,7 @@ export function ProfileSettings() {
             <Textarea
               id="bio"
               defaultValue="Product Manager with 5 years of experience in tech. Passionate about creating user-friendly products and delivering engaging presentations."
-              className="min-h-[100px]"
+              className="min-h-[100px] glass-card"
             />
           </div>
         </div>

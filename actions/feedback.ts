@@ -1,8 +1,13 @@
-// app/actions/generatePerformanceFeedback.ts
 "use server";
 
 import { getUserIdFromSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.NEBIUS_API_KEY!,
+  baseURL: "https://api.studio.nebius.ai/v1",
+});
 
 type FeedbackSummary = {
   overallScore: number;
@@ -11,18 +16,12 @@ type FeedbackSummary = {
   pacing: { score: number; wordsPerMinute: number; notes: string };
   fillerWords: { score: number; count: number; notes: string };
   clarity: { score: number; notes: string };
+  aiFeedback: string;
+  slideTips: { slide: string; feedback: string }[];
+  audienceQuestions: string[]; // ✅ new field
+  contentMatch: number; // Additional content match score (0-100)
   error?: string;
 };
-
-const fillerWordList = [
-  "um",
-  "uh",
-  "like",
-  "you know",
-  "so",
-  "actually",
-  "basically",
-];
 
 export async function generatePerformanceFeedback({
   feedbackInput,
@@ -33,106 +32,175 @@ export async function generatePerformanceFeedback({
 }): Promise<FeedbackSummary> {
   try {
     const user = await getUserIdFromSession();
-    if (!user) throw new Error("aunauthorized");
+    if (!user) throw new Error("unauthorized");
 
     const transcription = feedbackInput.get("transcription") as string;
-    const time = feedbackInput.get("duration") as string;
-     const slidesContentRaw = await prisma.slide.findMany({
-      where:{
-        presentationId:id
-      }
-     })
-    if (!transcription || !slidesContentRaw) {
-      throw new Error("Missing transcription or slides content");
-    }
+    const time = parseFloat(feedbackInput.get("duration") as string);
 
-    const slidesContent = slidesContentRaw.map((slide)=>slide.content);
-
-    const words: Array<{ confidence: number }> = transcription || [];
-    const totalWords = words.length;
-    const sumConfidence = words.reduce((sum, w) => sum + w.confidence, 0);
-    const averageConfidence = totalWords ? sumConfidence / totalWords : 0;
-
-    const wordsPerMinute = totalWords / Number(time);
-    const pacingScore =
-      wordsPerMinute >= 120 && wordsPerMinute <= 160 ? 85 : 70;
-
-    const fillerWordCount = words.filter((word) =>
-      fillerWordList.includes(word.toLowerCase())
-    ).length;
-    const fillerWordScore =
-      fillerWordCount < 10 ? 90 : fillerWordCount < 20 ? 75 : 60;
-
-    let matchedPoints = 0;
-    slidesContent.forEach((point) => {
-      if (transcription.toLowerCase().includes(point.toLowerCase())) {
-        matchedPoints++;
-      }
+    const slidesContentRaw = await prisma.slide.findMany({
+      where: { presentationId: id },
     });
-    const clarityScore = Math.round(
-      (matchedPoints / slidesContent.length) * 100
+    if (!transcription || !slidesContentRaw.length || isNaN(time)) {
+      throw new Error("Missing required data");
+    }
+
+    const slidesContent = slidesContentRaw.map(
+      (s) => s.keycontent || s.content
     );
 
-    const strengths: string[] = [];
-    const improvements: string[] = [];
-
-    if (clarityScore > 80) {
-      strengths.push("Clear coverage of slide key points");
-    } else {
-      improvements.push("Missed explaining some key points from slides");
-    }
-
-    if (fillerWordScore > 80) {
-      strengths.push("Minimal use of filler words");
-    } else {
-      improvements.push("Reduce use of filler words like 'um', 'uh', etc.");
-    }
-
-    if (pacingScore > 80) {
-      strengths.push("Good pacing and rhythm");
-    } else {
-      improvements.push("Adjust speaking pace for better clarity");
-    }
-
-    if (clarityScore > 90 && pacingScore > 85) {
-      strengths.push("Strong and engaging delivery overall");
-    }
-
-    const overallScore = Math.round(
-      (pacingScore + fillerWordScore + clarityScore) / 3
-    );
-
-    return {
-      overallScore,
-      strengths,
-      areasForImprovement: improvements,
-      pacing: {
-        score: pacingScore,
-        wordsPerMinute,
-        notes:
-          pacingScore > 80
-            ? "Your speaking pace was within the ideal range."
-            : "Consider slowing down or speeding up depending on your audience.",
+    // AI system prompt for evaluation
+    const systemPrompt = `You are a public speaking performance evaluator.
+    You will receive a transcript, speaking duration (in minutes), and slide contents.
+    Return a JSON object with this structure:
+    
+    {
+      "overallScore": number (0-100),
+      "strengths": [string],
+      "areasForImprovement": [string],
+      "pacing": {
+        "score": number (0-100),
+        "wordsPerMinute": number,
+        "notes": string
       },
-      fillerWords: {
-        score: fillerWordScore,
-        count: fillerWordCount,
-        notes:
-          fillerWordScore > 80
-            ? "Very few filler words detected, great job!"
-            : "Try pausing instead of using filler words.",
+      "fillerWords": {
+        "score": number (0-100),
+        "count": number,
+        "notes": string
       },
-      clarity: {
-        score: clarityScore,
-        notes:
-          clarityScore > 80
-            ? "Most slide points were covered clearly."
-            : "Consider covering all important points from the slides.",
+      "clarity": {
+        "score": number (0-100),
+        "notes": string
       },
+      "aiFeedback": string,
+      "slideTips": [{ "slide": string, "feedback": string }],
+      "audienceQuestions": [string],
+      "contentMatch": number
+    }
+    
+    Generate 4 insightful, topic-relevant audience questions that could be asked after this presentation based on the slides and transcript.
+    Keep the response strictly as JSON. Do not explain anything outside it.`;
+    const userPrompt = `
+TRANSCRIPT:
+${transcription}
+
+DURATION:
+${time.toFixed(2)} minutes
+
+SLIDES:
+${slidesContent.join("\n")}
+`;
+
+    const aiResponse = await openai.chat.completions.create({
+      model: "meta-llama/Meta-Llama-3.1-8B-Instruct",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+      temperature: 0.7,
+    });
+
+    // Parsing AI response and handling error scenarios
+    let parsed: FeedbackSummary = {
+      overallScore: 0,
+      strengths: [],
+      areasForImprovement: [],
+      pacing: { score: 0, wordsPerMinute: 0, notes: "Error occurred." },
+      fillerWords: { score: 0, count: 0, notes: "Error occurred." },
+      clarity: { score: 0, notes: "Error occurred." },
+      aiFeedback: "Unable to generate AI feedback.",
+      audienceQuestions: [],
+      slideTips: [],
+      contentMatch: 0,
     };
-  } catch (error: any) {
-    console.error("Error generating performance feedback:", error);
 
+    try {
+      const raw = aiResponse.choices[0].message.content || "";
+      console.log("raw", raw);
+      parsed = JSON.parse(raw);
+      console.log("parsed", parsed);
+    } catch (e) {
+      parsed.aiFeedback = "AI response was malformed or failed.";
+      console.error("Failed to parse AI feedback:", e);
+    }
+    const matchPercentage = calculateContentMatch(transcription, slidesContent);
+    parsed.contentMatch = matchPercentage;
+    await prisma.presentation.update({
+      where: {
+        id,
+      },
+      data: {
+        lastview: new Date(),
+      },
+    });
+    const existing = await prisma.feedback.findFirst({
+      where: {
+        presentationId: id,
+      },
+    });
+    if (existing) {
+      // Delete old slide tips
+      await prisma.slideTip.deleteMany({
+        where: { feedbackId: existing.id },
+      });
+
+      await prisma.feedback.update({
+        where: { id: existing.id },
+        data: {
+          overallScore: parsed.overallScore,
+          strengths: parsed.strengths,
+          areasForImprovement: parsed.areasForImprovement,
+          pacingScore: parsed.pacing.score,
+          pacingNotes: parsed.pacing.notes,
+          fillerWordCount: parsed.fillerWords.count,
+          fillerWordNotes: parsed.fillerWords.notes,
+          clarityNotes: parsed.clarity.notes,
+          clarityScore: parsed.clarity.score,
+          aiFeedback: parsed.aiFeedback,
+          contentMatch: parsed.contentMatch,
+          fillerWordScore: parsed.fillerWords.score,
+          slideTips: {
+            create: parsed.slideTips.map((tip) => ({
+              slide: tip.slide,
+              feedbacks: tip.feedback,
+            })),
+          },
+          presentationId: id,
+        },
+      });
+
+      return parsed;
+    }
+
+    const createdFeedback = await prisma.feedback.create({
+      data: {
+        overallScore: parsed.overallScore,
+        strengths: parsed.strengths,
+        areasForImprovement: parsed.areasForImprovement,
+        pacingScore: parsed.pacing.score,
+        pacingNotes: parsed.pacing.notes,
+        fillerWordCount: parsed.fillerWords.count,
+        fillerWordNotes: parsed.fillerWords.notes,
+        clarityNotes: parsed.clarity.notes,
+        audienceQuestions: parsed.audienceQuestions,
+        clarityScore: parsed.clarity.score,
+        aiFeedback: parsed.aiFeedback || "hehe",
+        contentMatch: parsed.contentMatch,
+        fillerWordScore: parsed.fillerWords.score,
+        slideTips: {
+          create: parsed.slideTips.map((tip) => ({
+            slide: tip.slide,
+            feedbacks: tip.feedback,
+          })),
+        },
+        presentationId: id,
+      },
+    });
+    if (!createdFeedback) {
+      throw new Error("unable to create feedback");
+    }
+    return parsed;
+  } catch (error: any) {
+    console.error("AI feedback error:", error);
     return {
       overallScore: 0,
       strengths: [],
@@ -140,18 +208,40 @@ export async function generatePerformanceFeedback({
       pacing: {
         score: 0,
         wordsPerMinute: 0,
-        notes: "An error occurred while analyzing pacing.",
+        notes: "Error occurred.",
       },
       fillerWords: {
         score: 0,
         count: 0,
-        notes: "An error occurred while analyzing filler words.",
+        notes: "Error occurred.",
       },
       clarity: {
         score: 0,
-        notes: "An error occurred while analyzing clarity.",
+        notes: "Error occurred.",
       },
-      error: error.message || "Unknown error occurred",
+      aiFeedback: "Unable to generate AI feedback.",
+      slideTips: [],
+      audienceQuestions: [],
+      contentMatch: 0,
+      error: error.message,
     };
   }
+}
+
+// Function to calculate content match between transcription and slides
+function calculateContentMatch(
+  transcription: string,
+  slides: string[]
+): number {
+  let matchedPoints = 0;
+
+  // Calculate how many slides' content appears in the transcription
+  slides.forEach((slideContent) => {
+    if (transcription.toLowerCase().includes(slideContent.toLowerCase())) {
+      matchedPoints++;
+    }
+  });
+
+  const matchPercentage = (matchedPoints / slides.length) * 100;
+  return Math.round(matchPercentage); // Return the percentage of content match
 }

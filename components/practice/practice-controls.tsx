@@ -13,7 +13,7 @@ interface PracticeControlsProps {
 
 export function PracticeControls({ currentSlideIndex, totalSlides, onNextSlide, onPrevSlide }: PracticeControlsProps) {
   return (
-    <Card>
+    <Card className="glass-card">
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <Button variant="outline" size="icon" onClick={onPrevSlide} disabled={currentSlideIndex === 0}>

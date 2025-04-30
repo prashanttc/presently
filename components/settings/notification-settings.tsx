@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 
 export function NotificationSettings() {
   return (
-    <Card>
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle>Notifications</CardTitle>
         <CardDescription>Configure how you receive notifications</CardDescription>

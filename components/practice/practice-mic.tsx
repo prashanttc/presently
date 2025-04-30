@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Mic, MicOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card } from "../ui/card"
 
 interface PracticeMicProps {
   isRecording: boolean
@@ -67,7 +68,7 @@ export function PracticeMic({ isRecording, toggleRecording, disabled }: Practice
   }, [isRecording])
 
   return (
-    <div className="flex flex-col items-center justify-center p-4">
+    <div className="flex flex-col items-center justify-center p-4 ">
       <div className="text-sm font-medium text-muted-foreground mb-2">
         <span>Microphone</span>
       </div>

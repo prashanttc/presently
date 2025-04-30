@@ -26,7 +26,7 @@ export function PracticeSlideView({ slides, currentSlideIndex, onNextSlide, onPr
   const progress = ((currentSlideIndex + 1) / slides.length) * 100
 
   return (
-    <Card className="flex h-[600px] flex-col">
+    <Card className="flex h-[600px] flex-col glass-card">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b">
         <CardTitle className="text-xl">
           Slide {currentSlideIndex + 1} of {slides.length}
@@ -48,7 +48,7 @@ export function PracticeSlideView({ slides, currentSlideIndex, onNextSlide, onPr
         </div>
       </CardHeader>
       <CardContent className="flex-1 overflow-auto p-6">
-        <div className="flex h-full flex-col items-center justify-center rounded-lg border bg-card p-6 text-center">
+        <div className="flex h-full flex-col items-center justify-center rounded-lg border p-6 text-center">
           {currentSlide.imageUrl?
           <Image src={currentSlide.imageUrl} height={1000} width={1000} alt={currentSlide.title||'title'}/>:
           <p className="text-lg">{currentSlide.content}</p>
@@ -56,7 +56,7 @@ export function PracticeSlideView({ slides, currentSlideIndex, onNextSlide, onPr
 
         </div>
       </CardContent>
-      <CardFooter className="border-t bg-muted/50 px-6 py-4">
+      <CardFooter className="border-t  px-6 py-4">
         <div className="w-full space-y-2">
           <div className="flex justify-between text-sm">
             <span>Progress</span>

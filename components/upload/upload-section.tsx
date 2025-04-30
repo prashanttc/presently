@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { useUploadppt } from "@/query/presentation";
 
 export function UploadSection() {
-  const{mutate,isError,error,isPending,isSuccess  }=useUploadppt()
+  const{mutate,isError,error,isPending,isSuccess,data  }=useUploadppt()
   const [dragActive, setDragActive] = useState(false);
   const router = useRouter();
 
@@ -57,14 +57,17 @@ export function UploadSection() {
     }
     mutate(file)
   };
-
+  if(isSuccess){
+    router.push(`/practice/${data.presentationId}`)
+    toast.success(`succesfully uploaded`)
+  }
   if(isError){
     toast.error(error.message)
   }
 
   return (
     <Card
-      className={`border-2 border-dashed ${
+      className={`glass-card border-2 border-dashed ${
         dragActive ? "border-primary" : "border-muted-foreground/25"
       }`}
     >

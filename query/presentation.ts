@@ -1,4 +1,5 @@
 import { generatePerformanceFeedback } from "@/actions/feedback";
+import { getfeedbackbyId } from "@/actions/feedbackbyid";
 import { getallPpt } from "@/actions/getallppt";
 import { getCurrentppt } from "@/actions/getCurrentPpt";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -50,5 +51,13 @@ export function useGenerateFeedback() {
   return useMutation({
     mutationFn: ({ feedbackInput, id }: { feedbackInput: FormData; id: string }) =>
       generatePerformanceFeedback({ feedbackInput, id }),
+  });
+}
+
+export function useGetFeedbackById(id: string) {
+  return useQuery({
+    queryKey: ["feedbackById", id],
+    queryFn: () => getfeedbackbyId(id),
+    enabled: !!id,
   });
 }

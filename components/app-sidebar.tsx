@@ -47,14 +47,14 @@ export function AppSidebar() {
   ]
 
   return (
-    <Sidebar>
-      <SidebarHeader className="flex items-center justify-between p-4">
+    <Sidebar className="bg-sidebar-primary">
+      <SidebarHeader className="flex items-center justify-between p-4 glass-header">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           <FilePresentation className="h-6 w-6 text-primary" />
           <span className="text-xl font-bold">CueCard</span>
         </Link>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="b">
         <SidebarMenu>
           {routes.map((route) => (
             <SidebarMenuItem key={route.href}>
