@@ -14,8 +14,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeSelector } from "./theme-selector"
+import { signOut, useSession } from "next-auth/react"
 
 export function AppHeader() {
+  const {data}=useSession()
+  if(!data){
+    return
+  }
+  const user = data.user;
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 glass-header px-4 md:px-6">
       <SidebarTrigger className="md:hidden" />
@@ -39,12 +45,12 @@ export function AppHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder.svg" alt="User" />
+                <AvatarImage src={user.image||"/placeholder.svg" }alt="User" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="dialog-themed">
+          <DropdownMenuContent align="end" className="cursor-pointer">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
@@ -56,7 +62,7 @@ export function AppHeader() {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>signOut()} className="cursor-pointer">Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
