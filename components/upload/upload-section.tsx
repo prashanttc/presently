@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FileUp, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -57,13 +57,18 @@ export function UploadSection() {
     }
     mutate(file)
   };
-  if(isSuccess){
-    router.push(`/practice/${data.presentationId}`)
-    toast.success(`succesfully uploaded`)
-  }
+  useEffect(() => {
+    if (isSuccess && data?.presentationId) {
+      toast.success("Successfully uploaded");
+      router.push(`/practice/${data.presentationId}`);
+    }
+  }, [isSuccess, data, router]);
+  
+useEffect(() => {
   if(isError){
     toast.error(error.message)
   }
+}, [error]);
 
   return (
     <Card

@@ -46,8 +46,9 @@ export async function POST(req: NextRequest) {
       presentationId: presentation.id,
       slides: uploadedImageUrls, // front-end can show images immediately
     });
-  } catch (err) {
-    console.error("PPTX upload error:", err);
+  } catch (error:any) {
+    console.error(" upload error:", error.message);
+    console.log("error",error)
     return NextResponse.json(
       { error: "Failed to process file" },
       { status: 500 }

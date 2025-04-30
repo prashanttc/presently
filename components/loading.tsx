@@ -15,7 +15,7 @@ export function Loading({ className, size = "md", text }: LoadingProps) {
 
   return (
     <div className={cn("flex flex-col items-center justify-center w-full h-full", className)}>
-      <div className="loading-dots text-white">
+      <div className="loading-dots text-white ">
         <div className={sizeClasses[size]} />
         <div className={sizeClasses[size]} />
         <div className={sizeClasses[size]} />
