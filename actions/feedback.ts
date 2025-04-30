@@ -77,7 +77,7 @@ export async function generatePerformanceFeedback({
       "contentMatch": number
     }
     
-    Generate 4 insightful, topic-relevant audience questions that could be asked after this presentation based on the slides and transcript.
+    Generate 10 insightful, topic-relevant audience questions that could be asked after this presentation based on the slides and transcript.
     Keep the response strictly as JSON. Do not explain anything outside it.`;
     const userPrompt = `
 TRANSCRIPT:
