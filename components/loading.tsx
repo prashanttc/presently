@@ -20,7 +20,7 @@ export function Loading({ className, size = "md", text }: LoadingProps) {
         <div className={sizeClasses[size]} />
         <div className={sizeClasses[size]} />
       </div>
-      {text && <p className="mt-3 text-sm text-muted-foreground">{text}</p>}
+      {text && <p className="mt-3 text-sm text-white">{text}</p>}
     </div>
   )
 }

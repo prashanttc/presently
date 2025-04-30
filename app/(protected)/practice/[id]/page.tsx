@@ -75,7 +75,7 @@ export default function PracticePage() {
 
   if (isPending || isLoading || loading) {
     return (
-     <Loading/>
+     <Loading text="uploading you audio please wait"/>
     );
   }
   if(isSuccess){
