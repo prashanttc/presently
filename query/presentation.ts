@@ -18,7 +18,7 @@ export async function uploadppt(file: File) {
     const data = await response.json();
     return data;
   } catch (error: any) {
-    console.error(error.Message);
+    console.error(error.message);
     throw new Error("internal server error");
   }
 }
