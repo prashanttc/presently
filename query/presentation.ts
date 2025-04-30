@@ -42,7 +42,8 @@ export function useUploadppt() {
   return useMutation({
     mutationFn: uploadppt,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["allpt"] });
+      queryClient.invalidateQueries({ queryKey: ["allPpt"] });
+      queryClient.invalidateQueries({ queryKey: ["feedbackById"] });
     },
   });
 }
