@@ -24,6 +24,7 @@ export default function PracticePage() {
   const { data, isLoading, error, isError } = useGetCurrentPpt(id || "");
   const {
     mutate,
+    isSuccess,
     isError: errorgenerating,
     error: errorgen,
     isPending,
@@ -77,7 +78,10 @@ export default function PracticePage() {
      <Loading/>
     );
   }
-  router.push(`/feedback/${id}`);
+  if(isSuccess){
+    toast.success("successfully submitted audio")
+    router.push(`/feedback/${id}`);
+  }
 
   const startPractice = async () => {
     setIsPracticing(true);
