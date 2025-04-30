@@ -11,17 +11,6 @@ interface SlideTips{
 }
 
 export function SlideSummary({ summary }: FeedbackSummaryProps) {
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return "text-success"
-    if (score >= 70) return "text-warning"
-    return "text-destructive"
-  }
-
-  const getProgressColor = (score: number) => {
-    if (score >= 90) return "bg-success"
-    if (score >= 70) return "bg-warning"
-    return "bg-destructive"
-  }
 
   return (
     <Card className="glass-card">
